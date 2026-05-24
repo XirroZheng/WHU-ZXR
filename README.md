@@ -1,12 +1,51 @@
 # WHU ZXR - SQLite Enhanced Research Project
 
-本项目是一个基于 SQLite 的深度研究与实验平台，旨在探索 SQLite 在**多模数据处理**领域的扩展能力与性能优化。项目包含了 SQLite 核心源码、扩展件（vec, graph）以及一系列用于性能评估和算法验证的实验脚本。
+本项目是本人的毕业设计代码集与实验集：一个基于 SQLite 的实验平台，旨在探索 SQLite 在**多模数据处理**领域的扩展能力与性能优化，包括向量搜索、半结构文档搜索、图搜索等。项目包含了 SQLite 核心源码、扩展件（vec, graph）以及一系列用于性能评估和算法验证的实验脚本。
 
 ## 使用指南
 
 - 编译SQLITE
+  ```
+    apt install gcc make tcl-dev  ;
+    tar xzf sqlite.tar.gz         ;
+    mkdir bld                     ;
+    cd bld                        ;
+    ../sqlite/configure           ;
+    make sqlite3                  ;
+    make sqlite3.c                ;
+    make sqldiff                  ;
+    ```
+    由于不同版本的编译命令有所不同，所以统一用make去编译
 - 编译扩展件
+  由于路径不同，本项目提供makefile文件，需要手动修改目录。
+  ```
+  ./mybuild.sh
+  ```
+  或
+  ```
+  gcc -g -fPIC -shared sqlite-vec.c -o vec0.so -I
+  ```
 - 启动SQLITE后，LOAD需要使用的扩展件
+  ```
+  .load vec0.so
+  ```
+  或
+  ```
+  .load graph0.so
+  ```
+- 创建一个带索引的表示例
+  ```
+  create virtual table mytable using vec0(
+  id integer,
+  news text,
+  embedding float[8],
+  create_index = hybrid
+  );
+  ```
+- 执行一个简单测试示例
+  ```
+  .read init.sql
+  ```
 - 执行测试代码（部分测试代码依赖数据集需自行下载、部分实验已改为随机数据）
 
 
